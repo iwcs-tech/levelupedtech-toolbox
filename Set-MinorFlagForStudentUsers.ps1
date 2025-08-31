@@ -48,11 +48,14 @@ if (-not $preview) {
 Write-Host "Preview users to be UPDATED (AgeGroup='minor', ConsentProvidedForMinor='granted')" -ForegroundColor Cyan
 $preview | Format-Table -AutoSize
 
-# Always export a record of who will be changed
-# $stamp = (Get-Date).ToString('yyyyMMdd-HHmmss')
+# Turned off export a record of who will be changed. We have the preview and don't likely need a csv everytime.
+$stamp = (Get-Date).ToString('yyyyMMdd-HHmmss')
 # $exportPath = ".\users-to-update-$($Prefix)-$stamp.csv"
 # $preview | Export-Csv -Path $exportPath -NoTypeInformation -Encoding UTF8
 # Write-Host "Exported preview to $exportPath" -ForegroundColor Green
+
+
+
 
 if ($PreviewOnly) {
     Write-Host "`nPreviewOnly is ON. No changes made. Set `$PreviewOnly = `$false to apply." -ForegroundColor Yellow
@@ -62,6 +65,11 @@ if ($PreviewOnly) {
 # -----------------------------
 # 4) APPLY updates
 # -----------------------------
+
+$proceed = Read-Host "Do you want to proceed with these changes? (Case-sensitive Y/N)"
+if ($proceed -eq "Y") {
+
+
 $errors = @()
 $updated = 0
 
@@ -84,6 +92,11 @@ if ($errors.Count -gt 0) {
     $errPath = ".\users-update-errors-$($Prefix)-$stamp.csv"
     $errors | Export-Csv -Path $errPath -NoTypeInformation -Encoding UTF8
     Write-Host "Logged $($errors.Count) error(s) to $errPath" -ForegroundColor Yellow
+}
+
+
+} else {
+    Write-Host "⚠️ No changes made."
 }
 
 # -----------------------------
