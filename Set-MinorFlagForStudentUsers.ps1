@@ -16,7 +16,11 @@ Connect-MgGraph -Scopes $scopes
 # -----------------------------
 # 1) Parameters
 # -----------------------------
-$Prefix = '30'                  # UPN prefix to target
+# $Prefix = '30'                  # UPN prefix to target
+
+$Prefix = (Read-Host "Enter UPN prefix to target for student grade level (e.g. 30)").Trim()
+if (-not $Prefix) { Write-Host "No prefix entered. Exiting." -ForegroundColor Yellow; return }
+
 $MembersOnly = $false           # set $true to exclude Guests
 $PreviewOnly = $false            # set $false to APPLY changes
 
